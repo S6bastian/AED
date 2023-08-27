@@ -42,7 +42,14 @@ int main()
         cout<<endl;
     }
 
+    //Buscar palabra
     search(word, reversedword, wordsize, crucigrama, filas, columnas);
+
+    //Liberar la memoria
+    for (int i = 0; i < filas; i++) {
+        delete[] crucigrama[i];
+    }
+    delete[] crucigrama;
 
     return 0; 
 }
@@ -61,7 +68,7 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 k++;
                 if(k == wordsize){
                     founded++;
-                    cout<<"Encontrado en la fila "<<i<<" columna "<<j-wordsize<<endl<<"Total encontrados "<<founded<<endl;
+                    cout<<"Palabra horizontal encontrada en la fila "<<i<<" columna "<<j-wordsize+1<<endl<<"Total encontrados "<<founded<<endl;
                 }
             }
             
@@ -70,13 +77,37 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 l++;
                 if(l == wordsize){
                     founded++;
-                    cout<<"Encontrado en la fila "<<i<<" columna "<<j-wordsize<<endl<<"Total encontrados "<<founded<<endl;
+                    cout<<"Palabra horizontal inversa encontrada en la fila "<<i<<" columna "<<j-wordsize+1<<endl<<"Total encontrados "<<founded<<endl;
                 }
-            }
-            
+            }    
         }
     }
 
+    //Vertical
+    for(int j = 0; j < columnas; j++){
+        int k = 0;
+        int l = 0;
+        for(int i = 0; i < filas; i++){
+            
+            //Normal
+            if(*(word + k) == *(*(crossword + i) + j)){
+                k++;
+                if(k == wordsize){
+                    founded++;
+                    cout<<"Palabra vertical encontrada en la fila "<<i-wordsize+1<<" columna "<<j<<endl<<"Total encontrados "<<founded<<endl;
+                }
+            }
+            
+            //Inversa
+            if(*(reversedword + l) == *(*(crossword + i) + j)){
+                l++;
+                if(l == wordsize){
+                    founded++;
+                    cout<<"Palabra vertical inversa encontrada en la fila "<<i-wordsize+1<<" columna "<<j<<endl<<"Total encontrados "<<founded<<endl;
+                }
+            }    
+        }
+    }
 }
 
 void reverse(char* x, int wordsize){
