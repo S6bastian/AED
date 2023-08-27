@@ -26,11 +26,11 @@ int main()
     }
 
     // Imprimir el contenido copiado
-    for (int i = 0; i < filas; i++) {
-        for (int j = 0; j < columnas; j++) {
-            cout << crucigrama[i][j] << " ";
+    for(char** i = crucigrama; i < crucigrama + filas; i++){
+        for(char* j = *i; j < *i + columnas; j++){
+            cout<<*j<<" ";
         }
-        cout << endl;
+        cout<<endl;
     }
 }
 /*
