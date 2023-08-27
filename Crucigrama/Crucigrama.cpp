@@ -1,8 +1,17 @@
 #include <iostream>
 using namespace std;
 
+void search(char[], char[], int, char**, int, int);
+void reverse(char*, int);
+void swap(char*, char*);
+
 int main()
 {
+    char word[] = "PATO";
+    int wordsize = sizeof(word)-1;
+    char reversedword[] = "PATO";
+    reverse(reversedword, wordsize);
+    
     int filas = 5;
     int columnas = 6;
     char contenido[5][6] = {
@@ -14,7 +23,7 @@ int main()
 
     //Crear _crucigrama_ dinámico
     char** crucigrama = new char* [filas];
-    for(char** i = crucigrama; i < crucigrama + filas; *i++){
+    for(char** i = crucigrama; i < crucigrama + filas; i++){
         *i = new char[columnas];
     }
 
@@ -25,14 +34,72 @@ int main()
         }
     }
 
-    // Imprimir el contenido copiado
+    //Imprimir el contenido copiado
     for(char** i = crucigrama; i < crucigrama + filas; i++){
         for(char* j = *i; j < *i + columnas; j++){
             cout<<*j<<" ";
         }
         cout<<endl;
     }
+
+    search(word, reversedword, wordsize, crucigrama, filas, columnas);
+
+    return 0; 
 }
+
+void search(char word[], char reversedword[], int wordsize, char** crossword, int filas, int columnas){
+    int founded = 0;
+    
+    //Horizontal
+    for(int i = 0; i < filas; i++){
+        int k = 0;
+        int l = 0;
+        for(int j = 0; j < columnas; j++){
+            if(*(word + k) == *(*(crossword + i) + j)){
+                k++;
+                if(k == wordsize){
+                    founded++;
+                    cout<<"Encontrado en la fila "<<i<<" columna "<<j-wordsize<<endl<<"Total encontrados "<<founded<<endl;
+                }
+            }
+            
+            if(*(reversedword + l) == *(*(crossword + i) + j)){
+                l++;
+                if(l == wordsize){
+                    founded++;
+                    cout<<"Encontrado en la fila "<<i<<" columna "<<j-wordsize<<endl<<"Total encontrados "<<founded<<endl;
+                }
+            }
+            
+        }
+    }
+
+}
+
+void reverse(char* x, int wordsize){
+    for(int i = 0; i < wordsize/2; i++){
+        swap(*x, *(x + wordsize - i));
+    }
+}
+
+/*
+char reverse(char* x, int wordsize){
+    char y = *x;
+    char* ptry = &y; 
+    for(int i = 0; i < wordsize/2; i++){
+        swap(*ptry, *(ptry + wordsize - i));
+    }
+    //FALTA VER EL TIPO DE OUTPUT
+    return y;
+}
+*/
+void swap(char* a, char* b){
+    char tmp = *a;
+    b = a;
+    *a = tmp;
+}
+
+
 /*
     for (char** i = crucigrama; i < crucigrama + filas; *i++){
         *i = new char[columnas];
