@@ -55,6 +55,8 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
         int k = 0;
         int l = 0;
         for(int j = 0; j < columnas; j++){
+            
+            //Normal
             if(*(word + k) == *(*(crossword + i) + j)){
                 k++;
                 if(k == wordsize){
@@ -63,6 +65,7 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 }
             }
             
+            //Inversa
             if(*(reversedword + l) == *(*(crossword + i) + j)){
                 l++;
                 if(l == wordsize){
@@ -78,32 +81,12 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
 
 void reverse(char* x, int wordsize){
     for(int i = 0; i < wordsize/2; i++){
-        swap(*x, *(x + wordsize - i));
+        swap(*(x+i), *(x + wordsize - i - 1));
     }
 }
 
-/*
-char reverse(char* x, int wordsize){
-    char y = *x;
-    char* ptry = &y; 
-    for(int i = 0; i < wordsize/2; i++){
-        swap(*ptry, *(ptry + wordsize - i));
-    }
-    //FALTA VER EL TIPO DE OUTPUT
-    return y;
-}
-*/
 void swap(char* a, char* b){
     char tmp = *a;
-    b = a;
+    *b = *a;
     *a = tmp;
 }
-
-
-/*
-    for (char** i = crucigrama; i < crucigrama + filas; *i++){
-        *i = new char[columnas];
-        for (char* j = *i; j < *i + columnas; j++){
-            j = new char;
-        }
-*/
