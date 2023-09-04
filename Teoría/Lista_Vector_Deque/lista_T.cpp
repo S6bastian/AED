@@ -33,7 +33,7 @@ void List<T> :: push_back(T v){
         head = tail = new Node(v);
     }
     else{
-        tail->next = new Node(v, tail->next, tail);
+        tail->next = new Node(v, tail->next, tail); // tail->next = new Node(v, nullptr, tail); Si pongo estó no funciona, consultar con googlebard
         tail = tail->next;
     }
 }
