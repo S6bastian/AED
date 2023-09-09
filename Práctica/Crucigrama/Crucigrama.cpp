@@ -4,6 +4,7 @@ using namespace std;
 void search(char[], char[], int, char**, int, int);
 void reverse(char*, int);
 void swap(char*, char*);
+bool palindrome(char*, char*, int);
 
 int main()
 {
@@ -68,7 +69,7 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 k++;
                 if(k == wordsize){
                     founded++;
-                    cout<<"Palabra horizontal encontrada en la fila "<<i<<" columna "<<j-wordsize+1<<endl<<"Total encontrados "<<founded<<endl;
+                    cout<<"Palabra horizontal encontrada en la fila "<<i<<" columna "<<j-wordsize+1<<endl;
                 }
             }
             
@@ -77,7 +78,7 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 l++;
                 if(l == wordsize){
                     founded++;
-                    cout<<"Palabra horizontal inversa encontrada en la fila "<<i<<" columna "<<j-wordsize+1<<endl<<"Total encontrados "<<founded<<endl;
+                    cout<<"Palabra horizontal inversa encontrada en la fila "<<i<<" columna "<<j-wordsize+1<<endl;
                 }
             }    
         }
@@ -94,7 +95,7 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 k++;
                 if(k == wordsize){
                     founded++;
-                    cout<<"Palabra vertical encontrada en la fila "<<i-wordsize+1<<" columna "<<j<<endl<<"Total encontrados "<<founded<<endl;
+                    cout<<"Palabra vertical encontrada en la fila "<<i-wordsize+1<<" columna "<<j<<endl;
                 }
             }
             
@@ -103,10 +104,18 @@ void search(char word[], char reversedword[], int wordsize, char** crossword, in
                 l++;
                 if(l == wordsize){
                     founded++;
-                    cout<<"Palabra vertical inversa encontrada en la fila "<<i-wordsize+1<<" columna "<<j<<endl<<"Total encontrados "<<founded<<endl;
+                    cout<<"Palabra vertical inversa encontrada en la fila "<<i-wordsize+1<<" columna "<<j<<endl;
                 }
             }    
         }
+    }
+
+    //Verificación de palíndromos
+    if(palindrome(word, reversedword, wordsize)){
+        cout<<"Total encontrados: "<<founded/2<<endl;
+    }
+    else{
+        cout<<"Total encontrados: "<<founded<<endl;
     }
 }
 
@@ -120,4 +129,13 @@ void swap(char* a, char* b){
     char tmp = *a;
     *b = *a;
     *a = tmp;
+}
+
+bool palindrome(char* x, char* y, int wordsize){
+    for(int i = 0; i < wordsize; i++){
+        if(*(x+i) != *(y+i)){
+            return false;
+        }
+    }
+    return true;
 }
