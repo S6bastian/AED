@@ -26,11 +26,11 @@ public:
 template<class T>
 void cola<T> :: push(T v){
     if(head != nullptr){
-        tail->next = new nodo(v);
+        tail->next = new nodo<T>(v);
         tail=tail->next;
     }
     else{
-        head = tail = new nodo(v);
+        head = tail = new nodo<T>(v);
     }
 }
 
