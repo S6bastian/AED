@@ -27,7 +27,7 @@ public:
 template<class T>
 void pila<T>::push(T v){
     if(top == nullptr || top->tia == top->array+(top->size)-1){ //Creación de una pila nueva o cuando se acaba el espacio en array
-        top = new nodo(top);
+        top = new nodo<T>(top);
         *(top->tia) = v;
     }
     else{
