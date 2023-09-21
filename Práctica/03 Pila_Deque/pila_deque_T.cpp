@@ -19,9 +19,6 @@ public:
     void push(T v);
     T pop();
     void print();
-    nodo<T>* getTop() const{
-        return top;
-    }
 };
 
 template<class T>
