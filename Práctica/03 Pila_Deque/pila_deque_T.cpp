@@ -4,21 +4,21 @@ using namespace std;
 template<class T, int size_parameter = 5>
 struct nodo{
     int size = size_parameter;
-    T* tia; //top inside array
     T array[size_parameter];
     nodo<T>* next;
     nodo(nodo<T>* n = nullptr){
         next = n;
-        tia = array;
     }
 };
 
 template<class T>
 class pila{
     nodo<T>* top = nullptr;
+    T* tia = nullptr; //top inside array
 public:
     void push(T v);
     T pop();
+    void print();
     nodo<T>* getTop() const{
         return top;
     }
@@ -26,27 +26,28 @@ public:
 
 template<class T>
 void pila<T>::push(T v){
-    if(top == nullptr || top->tia == top->array+(top->size)-1){ //Creación de una pila nueva o cuando se acaba el espacio en array
+    if(top == nullptr || tia == top->array + top->size - 1){ //Creación de una pila nueva o cuando se acaba el espacio en array
         top = new nodo<T>(top);
-        *(top->tia) = v;
+        tia = top->array;
     }
     else{
-        top->tia++;
-        *(top->tia) = v;
+        tia++;
     }
+    *(tia) = v;
 }
 
 template<class T>
 T pila<T>::pop(){
     T tmp = 0;
-    if(top->tia == top->array){
+    if(tia == top->array){
         nodo<T>* aux = top;
-        tmp = *(top->tia);
+        tmp = *(tia);
         top = top->next;
+        tia = top->array + top->size - 1;
         delete aux;
     }
     else{
-        tmp = *(top->tia--);
+        tmp = *(tia--);
     }
 
     return tmp;
@@ -54,32 +55,34 @@ T pila<T>::pop(){
 
 
 template<class T>
-void print(const pila<T>& P){
-    nodo<T>* currentTop = P.getTop();
-    T* currentTia = currentTop->tia;
-    //currentTia = currentTop->array+currentTop->size-1; // en caso de mostrar los array completos
-    if(!(currentTia == currentTop->array+currentTop->size-1)){
+void pila<T>::print(){
+    nodo<T>* cNodo = top;
+    T* cTia = tia;
+
+    if(!(cTia == cNodo->array + cNodo->size - 1)){
         cout<<" -----> "<<"||";
     }
 
     while(1){
-        if(currentTia == currentTop->array+currentTop->size-1){
+        if(cTia == cNodo->array + cNodo->size - 1){
             cout<<" -----> "<<"||";
         }
-        cout<<" "<<*(currentTia);
-        if(currentTia == currentTop->array){
+
+        cout<<" "<<*(cTia);
+
+        if(cTia == cNodo->array){
             cout<<" "<<"||";
-            if(currentTop->next == nullptr && currentTia == currentTop->array){
+            if(cNodo->next == nullptr){
                 cout<<endl;
                 break;
             }
             else{
-                currentTop = currentTop->next;
-                currentTia = currentTop->tia;
+                cNodo = cNodo->next;
+                cTia = cNodo->array + cNodo->size -1;
             }
         }
         else{
-            currentTia--;
+            cTia--;
         }
     }
     cout<<endl;
@@ -94,7 +97,7 @@ int main(){
         P.push(i);
     }
 
-    print<int>(P);
+    P.print();
     
     // Destrucción 
     cout<<"Popped elements:";
@@ -103,7 +106,7 @@ int main(){
     }
     cout<<endl<<endl;
 
-    print<int>(P);
+    P.print();
     
     return 0;
 }
