@@ -22,12 +22,6 @@ public:
 	void push(T v);
 	T pop();
 	void print();
-	nodo<T>* getHead(){
-		return head;
-	}
-	nodo<T>* getTail(){
-		return tail;
-	}
 };
 
 template<class T>
