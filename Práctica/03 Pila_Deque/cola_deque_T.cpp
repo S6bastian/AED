@@ -5,12 +5,10 @@ template<class T, int size_parameter = 5>
 struct nodo{
 	int size = size_parameter;
 	T array[size_parameter];
-	T* hia; //head in array
-	T* tia; //tail in array
+	
 	nodo<T>* next;
 	nodo(nodo<T>* n = nullptr){
 		next = n;
-		hia = tia = array;
 	}
 };
 
@@ -18,6 +16,8 @@ template<class T>
 class cola {
 	nodo<T>* head = nullptr;
 	nodo<T>* tail = nullptr;
+	T* hia = nullptr; //head in array
+	T* tia = nullptr; //tail in array
 public:
 	void push(T v);
 	T pop();
@@ -32,20 +32,22 @@ public:
 
 template<class T>
 void cola<T>::push(T v){
-	//Movimiento del puntero 
-	if(head == nullptr){
+ 	if(head == nullptr){
 		head = new nodo<T>();
 		tail = head;
+		hia = head->array;
+		tia = head->array;
 	}
-	else if(tail->tia == tail->array + tail->size - 1){
+	else if(tia == tail->array + tail->size - 1){
 		tail->next = new nodo<T>();
 		tail = tail->next;
+		tia = tail->array;
 	}
 	else{
-		tail->tia++;
+		tia++;
 	}
 
-	*(tail->tia) = v;	
+	*(tia) = v;	
 }
 
 template<class T>
@@ -53,18 +55,20 @@ T cola<T>::pop(){
 	T tmp = 0;
 	
 	if(head != nullptr){
-		if(head->hia == head->tia){
+		if(hia == head->array + head->size - 1){
 			nodo<T>* aux = head;
-			tmp = *(head->hia);
+			tmp = *(hia);
 			head = head->next;
+			hia = head->array;
 			delete aux;
-			if (head == nullptr){
+			if(head == nullptr){
 				tail = nullptr;
+				hia = tia = nullptr;
 			}
 		}
 		else{
-			tmp = *(head->hia);
-			head->hia++;
+			tmp = *(hia);
+			hia++;
 		}
 	}
 	return tmp;
@@ -73,18 +77,18 @@ T cola<T>::pop(){
 template<class T>
 void cola<T>::print(){
 	nodo<T>* cNodo = head; //current nodo
-	T* cHia = cNodo->hia; //current hia
+	T* cHia = hia; //current hia
 	cout<<"----> ||";
 
 	while(1){
 		cout<<" "<<*cHia;
 
-		if(cHia == tail->tia){
+		if(cHia == tia){
 			break;
 		}
-		else if(cHia == cNodo->tia){
+		else if(cHia == cNodo->array + cNodo->size - 1){
 			cNodo = cNodo->next;
-			cHia = cNodo->hia;
+			cHia = cNodo->array;
 			cout<<" || ----> ||";
 		}
 		else{
