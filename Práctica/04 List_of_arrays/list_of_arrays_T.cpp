@@ -18,13 +18,12 @@ struct Node {
 template<class T>
 class List {
     Node<T>* head;
-    T* pia; //pointer inside array 
-
+    T* pia; //pointer inside array
 
 public:
     List();
     //~List();
-    bool Find(T x, Node<T>**& pn, T*& pa);
+    bool Find(T x, Node<T>**& pn, T*& pa, Node<T>**& bpn);
     bool Add(T x);
     bool Remove(T x);
     void Print();
@@ -37,13 +36,14 @@ List<T>::List() {
 }
 
 template<class T>
-bool List<T>::Find(T x, Node<T>**& pn, T*& pa) {
+bool List<T>::Find(T x, Node<T>**& pn, T*& pa, Node<T>**& bpn) {
     pn = &head;
     pa = (*pn)->array;
     while (*pn && *pa < x) {
         if (pa == pia)
             break;
         if (pa == (*pn)->EndOfArray()) {
+            bpn = pn;
             pn = &((*pn)->next);
             pa = (*pn)->array;
         }
@@ -58,6 +58,7 @@ bool List<T>::Find(T x, Node<T>**& pn, T*& pa) {
 template<class T>
 bool List<T>::Add(T x) {
     Node<T>** pn = nullptr; //pointer to node
+    Node<T>** bpn = nullptr; //before pointer to node
     T* pa = nullptr; //pointer to array
 
     if (head == nullptr) {
@@ -66,10 +67,10 @@ bool List<T>::Add(T x) {
         *pia = x;
     }
     else {
-        if (Find(x, pn, pa))
+        if (Find(x, pn, pa, bpn))
             return false;
 
-        //Añadimiento de elemento
+        //Movimiento y añadimiento de elemento en pia
         if (x > *pa) {
             if (pia == (*pn)->EndOfArray()) {
                 (*pn)->next = new Node<T>();
@@ -112,12 +113,69 @@ bool List<T>::Add(T x) {
                 }
                 else
                     pa++;
-
             }
         }
     }
 
     return true;
+}
+
+template<class T>
+bool List<T>::Remove(T x) {
+    Node<T>** pn = nullptr; //pointer to node
+    Node<T>** bpn = nullptr; //before pointer to node
+    T* pa = nullptr; //pointer to array
+
+    if (head == nullptr) {
+        cout << "Lista vacia" << endl;
+        return false;
+    }
+    if (!Find(x, pn, pa, bpn)) {
+        return false;
+    }
+    else {
+        T* t = pa;
+        
+        if (*pia == x) {
+            if (pia == (*pn)->array) {
+                if (*pn == head) {
+                    delete* pn;
+                    head = nullptr;
+                    pia = nullptr;
+                }
+                else {
+                    delete* pn;
+                    pia = (*bpn)->EndOfArray();
+                    //(*bpn)->next = nullptr;
+                }
+            }
+            else
+                pia--;
+
+            return true;
+        }
+        else {
+            while (1) {
+                //Aumento de pa
+                if (pa == (*pn)->EndOfArray()) {
+                    pn = &((*pn)->next);
+                    pa = (*pn)->array;
+                }
+                else
+                    pa++;
+
+                *t = *pa;
+                if (pa == pia) {
+                    if (pia == (*pn)->array)
+                        delete (*pn);
+                    pia = t;
+                    return true;
+                }
+                else
+                    t = pa;
+            }
+        }
+    }
 }
 
 template<class T>
@@ -155,7 +213,15 @@ int main() {
     L.Add(5);
     L.Print();
 
-    cout << "PRUEBAS REMOVE" << endl;
+    cout <<endl<< "PRUEBAS REMOVE" << endl;
+    for (int i = 0; i < 23; i += 2)
+        L.Remove(i);
+    L.Print();
+    for (int i = 0; i < 25; i += 3)
+        L.Remove(i);
+    L.Print();
+    L.Remove(5);
+    L.Print();
 
     return 0;
 }
