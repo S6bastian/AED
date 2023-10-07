@@ -69,18 +69,17 @@ bool List<T>::Add(T x) {
         if (Find(x, pn, pa))
             return false;
 
-        //Aumento de pia
-        if (pia == (*pn)->EndOfArray()) {
-            (*pn)->next = new Node<T>();
-            pn = &((*pn)->next);
-            pia = (*pn)->array;
-        }
-        else {
-            pia++;
-        }
-
         //Añadimiento de elemento
         if (x > *pa) {
+            if (pia == (*pn)->EndOfArray()) {
+                (*pn)->next = new Node<T>();
+                pn = &((*pn)->next);
+                pia = (*pn)->array;
+            }
+            else {
+                pia++;
+            }
+
             *pia = x;
         }
         else {
@@ -91,13 +90,27 @@ bool List<T>::Add(T x) {
                 *pa = t0;
                 t0 = t1;
 
-                if (pa == pia)
+                if (pa == pia) {
+                    if (pia == (*pn)->EndOfArray()) {
+                        (*pn)->next = new Node<T>();
+                        pn = &((*pn)->next);
+                        pia = (*pn)->array;
+                    }
+                    else {
+                        pia++;
+                    }
+
+                    t1 = *pia;
+                    *pia = t0;
+                    t0 = t1;
+
                     break;
-                else if (pa == (*pn)->EndOfArray() && pa != pia) {
+                }
+                else if (pa == (*pn)->EndOfArray()) {
                     pn = &((*pn)->next);
                     pa = (*pn)->array;
                 }
-                else if(pa != pia)
+                else
                     pa++;
 
             }
@@ -115,31 +128,34 @@ void List<T>::Print() {
     cout << "HEAD ---> ||";
     while (pn) {
         cout << " " << *pa;
+        if (pa == pia)
+            break;
+
         if (pa == pn->EndOfArray()) {
             pn = pn->next;
             pa = pn->array;
-            if (pa != pia) {
-                cout << " || ---> ||";
-            }
+            cout << " || ---> ||";
         }
-        else if (pa == pia)
-            break;
         else
             pa++;
-
-        
     }
-    cout << " ||" << endl;
+    cout << " || ---> NULLPTR" << endl;
 }
 
 int main() {
     List<int> L;
 
-    for (int i = 0; i < 10; i+=2)
+    cout << "PRUEBAS ADD" << endl;
+    for (int i = 0; i < 23; i+=2)
         L.Add(i);
-    L.Add(5);
-
     L.Print();
+    for (int i = 0; i < 25; i += 3)
+        L.Add(i);
+    L.Print();
+    L.Add(5);
+    L.Print();
+
+    cout << "PRUEBAS REMOVE" << endl;
 
     return 0;
 }
