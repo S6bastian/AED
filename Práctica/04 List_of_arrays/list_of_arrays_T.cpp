@@ -90,7 +90,7 @@ bool List<T>::Add(T x) {
                 t1 = *pa;
                 *pa = t0;
                 t0 = t1;
-                //pa == (*pn)->EndOfArray() ? pn = &((*pn)->next), pa = (*pn)->array : pa++; REVISAR
+
                 if (pa == pia)
                     break;
                 else if (pa == (*pn)->EndOfArray() && pa != pia) {
@@ -118,12 +118,12 @@ void List<T>::Print() {
         if (pa == pn->EndOfArray()) {
             pn = pn->next;
             pa = pn->array;
+            if (pa != pia) {
+                cout << " || ---> ||";
+            }
         }
         else if (pa == pia)
             break;
-        else if (pa == pn->EndOfArray()) {
-            cout << " || ---> ||";
-        }
         else
             pa++;
 
