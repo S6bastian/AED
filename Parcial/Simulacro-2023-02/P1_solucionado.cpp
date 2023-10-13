@@ -111,7 +111,49 @@ public:
         // Se debe terminar con la lista actual ordenada y la lista pasada por referencia vacia
         // No se puede crear nodos adicionales
 
-        
+        Node<T>* current1 = head;
+        Node<T>* current2 = list2.head;
+        Node<T>* t;
+
+        while (current1 != nullptr && current2 != nullptr) {
+
+            if (current1->next == nullptr) {
+                //if(current)
+                current1->next == current2->next;
+                current1 = nullptr;
+            }
+
+            else if (current2->next == nullptr) {
+                current2->next == current1->next;
+                current2 = nullptr;
+            }
+            else {
+                if (current1->val < current2->val) {
+                    if (current1->next->val > current2->val) {
+                        t = current1->next;
+                        current1->next = current2;
+                        current1 = t;
+                    }
+                    else
+                        current1 = current1->next;
+                }
+                else {
+                    if (current2->next->val > current1->val) {
+                        t = current2->next;
+                        current2->next = current1;
+                        if (current2->next == head) {
+                            head = current2;
+                        }
+                        current2 = t;
+                    }
+                    else
+                        current2 = current2->next;
+                }
+            }
+            
+
+        }
+
 
     }
 };
