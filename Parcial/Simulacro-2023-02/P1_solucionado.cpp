@@ -111,50 +111,55 @@ public:
         // Se debe terminar con la lista actual ordenada y la lista pasada por referencia vacia
         // No se puede crear nodos adicionales
 
-        Node<T>* current1 = head;
-        Node<T>* current2 = list2.head;
-        Node<T>* t;
+        Node<T>* bc1; //before current1
+        Node<T>* c1; //current1
+        Node<T>* c2; //current2
 
-        while (current1 != nullptr && current2 != nullptr) {
+        // Estableciendo cabeza
+        if (list2.head == nullptr)
+            return;
 
-            if (current1->next == nullptr) {
-                //if(current)
-                current1->next == current2->next;
-                current1 = nullptr;
-            }
-
-            else if (current2->next == nullptr) {
-                current2->next == current1->next;
-                current2 = nullptr;
-            }
-            else {
-                if (current1->val < current2->val) {
-                    if (current1->next->val > current2->val) {
-                        t = current1->next;
-                        current1->next = current2;
-                        current1 = t;
-                    }
-                    else
-                        current1 = current1->next;
-                }
-                else {
-                    if (current2->next->val > current1->val) {
-                        t = current2->next;
-                        current2->next = current1;
-                        if (current2->next == head) {
-                            head = current2;
-                        }
-                        current2 = t;
-                    }
-                    else
-                        current2 = current2->next;
-                }
-            }
-            
-
+        if (head == nullptr) {
+            head = list2.head;
+            list2.head = nullptr;
+            return;
         }
 
+        bc1 = head;
+        c1 = bc1->next;
+        c2 = list2.head;
 
+
+        if (list2.head->val < head->val) {
+            list2.head = c2->next;
+            head = c2;
+            c2->next = bc1;
+ 
+            bc1 = head;
+            c1 = bc1->next;
+            c2 = list2.head;
+        }
+
+        // Ordenamiento
+        while (list2.head) {
+            if (c2->val < c1->val) {
+                list2.head = c2->next;
+                
+                bc1->next = c2;
+                c2->next = c1;
+
+                bc1 = c2;
+                c2 = list2.head;
+            }
+            else {
+                bc1 = c1;
+                c1 = c1->next;
+                if (c1 == nullptr) {
+                    bc1->next = c2;
+                    list2.head = nullptr;
+                }
+            }
+        }
     }
 };
 
