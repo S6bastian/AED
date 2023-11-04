@@ -69,7 +69,10 @@ bool RBTree<T>::Insert(T x) {
 
 template <class T>
 void RBTree<T>::insertFixUp(Node<T>** p) {
-	while ((*p)->color == 1) {
+	Node<T>* parent = nullptr;
+	Node<T>* grandParent = nullptr;
+
+	while (*p != root && (*p)->color == 1) {
 
 	}
 
