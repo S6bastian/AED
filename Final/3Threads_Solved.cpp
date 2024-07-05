@@ -80,9 +80,6 @@ void levels()
     }
 
 }
-
-
-
 int main()
 {
     printm();
