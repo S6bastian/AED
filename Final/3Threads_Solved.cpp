@@ -22,7 +22,6 @@ int m[10][10] =
 };
 
 mutex mtx[10][10];
-mutex muse;
 
 void printm()
 {
@@ -41,78 +40,56 @@ void printm()
     std::cout << "---------------------------\n";
 }
 
-void around(int x , int y, int value, queue<tuple<int*, int, int>>* sector) {
-    if (x >= 10 || x < 0 || y >= 10 || y < 0) // || m[x][y] != 0
+void around(tuple<int, int> cell, queue<tuple<int, int>>* sector) {
+    int x = get<0>(cell), y = get<1>(cell);
+    int value = m[x][y];
+
+    if (x >= 10 || x < 0 || y >= 10 || y < 0 || value >= 10) // || 
         return;
 
     if (m[x + 1][y] == 0 && x + 1 < 10) {
+        mtx[x + 1][y].lock();
         m[x + 1][y] = value + 1;
-        sector->push(make_tuple(&m[x + 1][y], x + 1, y));
+        mtx[x + 1][y].unlock();
+        sector->push(make_tuple(x + 1, y));
     }
         
     if (m[x - 1][y] == 0 && x - 1 >= 0) {
+        mtx[x - 1][y].lock();
         m[x - 1][y] = value + 1;
-        sector->push(make_tuple(&m[x - 1][y], x - 1, y));
+        mtx[x - 1][y].unlock();
+        sector->push(make_tuple(x - 1, y));
     }
         
     if (m[x][y + 1] == 0 && y + 1 < 10) {
+        mtx[x][y + 1].lock();
         m[x][y + 1] = value + 1;
-        sector->push(make_tuple(&m[x][y + 1], x, y + 1));
+        mtx[x][y + 1].unlock();
+        sector->push(make_tuple(x, y + 1));
     }
         
     if (m[x][y - 1] == 0 && y - 1 >= 0) {
+        mtx[x][y - 1].lock();
         m[x][y - 1] = value + 1;
-        sector->push(make_tuple(&m[x][y - 1], x, y - 1));
+        mtx[x][y - 1].unlock();
+        sector->push(make_tuple(x, y - 1));
     }
         
 }
 
 void start(int x, int y) {
     
-    queue<tuple<int*, int, int>> *sector;
-    sector = new queue<tuple<int*, int, int>>;
+    queue<tuple<int, int>> *sector;
+    sector = new queue<tuple<int, int>>;
 
-    sector->push(make_tuple(&m[x][y], x, y));
+    sector->push(make_tuple(x, y));
     
-
-
-    for (int value = *get<0>(sector->front()); !sector->empty();) {
-        around(x, y, value, sector);
+    for (int value = m[x][y]; !sector->empty();) {
+        
+        around(sector->front(), sector);
         sector->pop();
-    }
-    
-    
-    /*
-    if (x >= 10 || x < 0 || y >= 10 || y < 0 || m[x][y] != 0 || value >= 10) //
-        return;
-
-    if (m[x][y] == 0) {
-        mtx[x][y].lock();
-        m[x][y] = value;
-        mtx[x][y].unlock();
-    }
-    
-    else 
-        return;
-
-    expand(x + 1, y, value + 1);
-    expand(x - 1, y, value + 1);
-    expand(x, y + 1, value + 1);
-    expand(x, y - 1, value + 1);
-
-*/   
+    }   
 }
-
-/*
-void start(int x, int y) {
-    int value = m[x][y];
-
-    expand(x + 1, y, value + 1);
-    expand(x - 1, y, value + 1);
-    expand(x, y + 1, value + 1);
-    expand(x, y - 1, value + 1);;
-}
-*/
 
 void levels()
 {
@@ -127,7 +104,6 @@ void levels()
     }
 
 }
-
 
 
 int main()
