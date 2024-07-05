@@ -44,31 +44,31 @@ void around(tuple<int, int> cell, queue<tuple<int, int>>* sector) {
     int x = get<0>(cell), y = get<1>(cell);
     int value = m[x][y];
 
-    if (x >= 10 || x < 0 || y >= 10 || y < 0 || value >= 10) // || 
+    if (x >= 10 || x < 0 || y >= 10 || y < 0 || value >= 9)
         return;
 
-    if (m[x + 1][y] == 0 && x + 1 < 10) {
+    if ((m[x + 1][y] == 0 || m[x + 1][y] > value + 1) && x + 1 < 10) {
         mtx[x + 1][y].lock();
         m[x + 1][y] = value + 1;
         mtx[x + 1][y].unlock();
         sector->push(make_tuple(x + 1, y));
     }
         
-    if (m[x - 1][y] == 0 && x - 1 >= 0) {
+    if ((m[x - 1][y] == 0 || m[x - 1][y] > value + 1) && x - 1 >= 0) {
         mtx[x - 1][y].lock();
         m[x - 1][y] = value + 1;
         mtx[x - 1][y].unlock();
         sector->push(make_tuple(x - 1, y));
     }
         
-    if (m[x][y + 1] == 0 && y + 1 < 10) {
+    if ((m[x][y + 1] == 0 || m[x][y + 1] > value + 1) && y + 1 < 10) {
         mtx[x][y + 1].lock();
         m[x][y + 1] = value + 1;
         mtx[x][y + 1].unlock();
         sector->push(make_tuple(x, y + 1));
     }
         
-    if (m[x][y - 1] == 0 && y - 1 >= 0) {
+    if ((m[x][y - 1] == 0 || m[x][y + 1] > value + 1) && y - 1 >= 0) {
         mtx[x][y - 1].lock();
         m[x][y - 1] = value + 1;
         mtx[x][y - 1].unlock();
@@ -104,7 +104,6 @@ void levels()
     }
 
 }
-
 
 int main()
 {
