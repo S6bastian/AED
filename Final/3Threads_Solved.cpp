@@ -2,6 +2,8 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include <queue>
+#include <tuple>
 
 using namespace std;
 
@@ -39,7 +41,48 @@ void printm()
     std::cout << "---------------------------\n";
 }
 
-void expand(int x, int y, int value) {
+void around(int x , int y, int value, queue<tuple<int*, int, int>>* sector) {
+    if (x >= 10 || x < 0 || y >= 10 || y < 0) // || m[x][y] != 0
+        return;
+
+    if (m[x + 1][y] == 0 && x + 1 < 10) {
+        m[x + 1][y] = value + 1;
+        sector->push(make_tuple(&m[x + 1][y], x + 1, y));
+    }
+        
+    if (m[x - 1][y] == 0 && x - 1 >= 0) {
+        m[x - 1][y] = value + 1;
+        sector->push(make_tuple(&m[x - 1][y], x - 1, y));
+    }
+        
+    if (m[x][y + 1] == 0 && y + 1 < 10) {
+        m[x][y + 1] = value + 1;
+        sector->push(make_tuple(&m[x][y + 1], x, y + 1));
+    }
+        
+    if (m[x][y - 1] == 0 && y - 1 >= 0) {
+        m[x][y - 1] = value + 1;
+        sector->push(make_tuple(&m[x][y - 1], x, y - 1));
+    }
+        
+}
+
+void start(int x, int y) {
+    
+    queue<tuple<int*, int, int>> *sector;
+    sector = new queue<tuple<int*, int, int>>;
+
+    sector->push(make_tuple(&m[x][y], x, y));
+    
+
+
+    for (int value = *get<0>(sector->front()); !sector->empty();) {
+        around(x, y, value, sector);
+        sector->pop();
+    }
+    
+    
+    /*
     if (x >= 10 || x < 0 || y >= 10 || y < 0 || m[x][y] != 0 || value >= 10) //
         return;
 
@@ -56,8 +99,11 @@ void expand(int x, int y, int value) {
     expand(x - 1, y, value + 1);
     expand(x, y + 1, value + 1);
     expand(x, y - 1, value + 1);
+
+*/   
 }
 
+/*
 void start(int x, int y) {
     int value = m[x][y];
 
@@ -66,6 +112,7 @@ void start(int x, int y) {
     expand(x, y + 1, value + 1);
     expand(x, y - 1, value + 1);;
 }
+*/
 
 void levels()
 {
@@ -80,6 +127,9 @@ void levels()
     }
 
 }
+
+
+
 int main()
 {
     printm();
